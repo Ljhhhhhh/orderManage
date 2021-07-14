@@ -1,0 +1,90 @@
+{
+	"pages": [
+		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {}
+		},
+		{
+			"path": "pages/component/form",
+			"style": {}
+		},
+		{
+			"path": "pages/component/list",
+			"style": {}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {}
+		},
+		{
+			"path": "pages/login/forget",
+			"style": {}
+		}, {
+			"path": "pages/index/orderInfo",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/customer/index",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+
+		}, {
+			"path": "pages/customer/info",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}
+	],
+	// "tabBar": {
+	// 	"color": "#141414",
+	// 	"selectedColor": "#0092ff",
+	// 	"borderStyle": "black",
+	// 	"backgroundColor": "#ffffff",
+	// 	"list": []
+	// 	// "list": [{
+	// 	//         "pagePath": "pages/index/index",
+	// 	//         "iconPath": "static/tabbar/order.png",
+	// 	//         "selectedIconPath": "static/tabbar/order-active.png",
+	// 	//         "text": "订单"
+	// 	//     }, {
+	// 	//         "pagePath": "pages/customer/index",
+	// 	//         "iconPath": "static/tabbar/customer.png",
+	// 	//         "selectedIconPath": "./static/tabbar/customer_active.png",
+	// 	//         "text": "客户"
+	// 	//     }]
+	// },
+	"globalStyle": {
+		"mp-alipay": {
+			/* 支付宝小程序特有相关 */
+			"transparentTitle": "always",
+			"allowsBounceVertical": "NO"
+		},
+		"navigationBarBackgroundColor": "#0092ff",
+		"navigationBarTitleText": "ColorUi for UniApp",
+		"navigationStyle": "custom",
+		"navigationBarTextStyle": "white"
+	},
+	"usingComponts": true,
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+				"name": "表单", //模式名称
+				"path": "pages/component/form", //启动页面
+				"query": "" //启动参数
+			},
+			{
+				"name": "列表", //模式名称
+				"path": "pages/component/list", //启动页面
+				"query": "" //启动参数
+			}
+		]
+	}
+
+}

@@ -1,0 +1,22 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Length, IsString, IsOptional } from 'class-validator';
+import { OrderStatus } from '../../shared/enum';
+
+export class UpdateOrderDto {
+    @IsOptional()
+    @ApiProperty()
+    @IsString()
+    @Length(3, 60)
+    readonly name: string;
+
+    @IsOptional()
+    @ApiProperty()
+    @IsString()
+    @Length(3, 60)
+    readonly spec: string;
+
+    @IsOptional()
+    @ApiProperty()
+    @IsString()
+    readonly status: OrderStatus;
+}
