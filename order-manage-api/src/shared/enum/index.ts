@@ -10,9 +10,11 @@ export enum RoleType {
     PRODUCTION = 'PRODUCTION',
 }
 
-export enum OrderStatus {
-    'wait_confirm' = 'wait_confirm',
-    'productive' = 'productive',
-    'wait_ship' = 'wait_ship',
-    'ship' = 'ship',
-}
+export type OrderStatus = 0 | 1 | 2 | 3;
+// 待确认 - 生成中 - 待发货 - 已发货
+// {
+//     'wait_confirm' = 'wait_confirm',
+//     'productive' = 'productive',
+//     'wait_ship' = 'wait_ship',
+//     'ship' = 'ship',
+// }

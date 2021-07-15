@@ -9,6 +9,7 @@ import {
     ParseIntPipe,
     Delete,
     Put,
+    Query,
 } from '@nestjs/common';
 import {
     ApiCreatedResponse,
@@ -17,6 +18,8 @@ import {
     ApiParam,
     ApiTags,
 } from '@nestjs/swagger';
+import { Auth } from '../decorators/http.decorators';
+import { RoleType } from '../shared/enum';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderService } from './order.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -35,6 +38,13 @@ export class OrderController {
         return this.orderService.findAll();
     }
 
+    @Get('/list')
+    @ApiOkResponse({ type: [OrderDto] })
+    @Auth(RoleType.ADMIN, RoleType.SALESMAN)
+    findOrderFromUser(@Req() request, @Query() query): Promise<any> {
+        return this.orderService.findOrderFromSalesman(request.user.id, query);
+    }
+
     @Get(':id')
     @ApiOkResponse({ type: OrderDto })
     @ApiParam({ name: 'id', required: true })
@@ -44,8 +54,7 @@ export class OrderController {
 
     @Post()
     @ApiCreatedResponse({ type: OrderEntity })
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+    @Auth(RoleType.ADMIN, RoleType.SALESMAN)
     create(
         @Body() createOrderDto: CreateOrderDto,
         @Req() request,
@@ -59,7 +68,7 @@ export class OrderController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     update(
-        @Param('id', new ParseIntPipe()) id: number,
+        @Param('id') id: string,
         @Req() request,
         @Body() updateOrderDto: UpdateOrderDto,
     ): Promise<OrderEntity> {
@@ -71,10 +80,7 @@ export class OrderController {
     @ApiParam({ name: 'id', required: true })
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
-    delete(
-        @Param('id', new ParseIntPipe()) id: number,
-        @Req() request,
-    ): Promise<OrderEntity> {
+    delete(@Param('id') id: string, @Req() request): Promise<OrderEntity> {
         return this.orderService.delete(id, request.user.id);
     }
 }

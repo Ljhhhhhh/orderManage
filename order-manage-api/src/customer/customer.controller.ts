@@ -36,7 +36,6 @@ export class CustomerController {
     @ApiOkResponse({ type: [CustomerDto] })
     @Auth(RoleType.ADMIN, RoleType.SALESMAN)
     findAllFromUser(@Query() query, @Req() request): Promise<any> {
-        console.log(1);
         return this.customerService.findAllFromUser(request.user.id, query);
     }
 

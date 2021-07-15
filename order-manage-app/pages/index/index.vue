@@ -7,13 +7,13 @@
 			<mescroll-uni :down="downOption" :up="{textNoMore: '— — 我是有底线的 — —'}" top="168rpx" ref="mescrollRef" @init="mescrollInit"
 				@down="downCallback" @up="upCallback">
 				<view style="width: 1px;height: 30rpx;"></view>
-				<view class="customer-item" @click="goCustomer(customer)" v-for="customer in list" :key="customer.id">
+				<view class="customer-item" @click="goCustomer(customer)" v-for="order in list" :key="order.id">
 					<view class="user-info">
 						<text class="cuIcon-my"></text>
-						<text> {{customer.username}}</text>
+						<text> {{order.name}}</text>
 					</view>
 					<view class="user-info">
-						<text>{{customer.phone.substr(3)}} </text>
+						<!-- <text>{{order.phone.substr(3)}} </text> -->
 						<text class="cuIcon-right"></text>
 					</view>
 
@@ -64,7 +64,7 @@
 					const {
 						code,
 						data
-					} = await request('/customer', 'GET', {
+					} = await request('/order/list', 'GET', {
 						current,
 						pageSize: 10
 					})

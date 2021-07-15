@@ -3,7 +3,7 @@ import { Order } from '../order.entity';
 
 export class OrderDto {
     @ApiProperty()
-    readonly id: number;
+    readonly id: string;
 
     @ApiProperty()
     readonly userId: string;
@@ -15,6 +15,9 @@ export class OrderDto {
     readonly name: string;
 
     @ApiProperty()
+    readonly category: string;
+
+    @ApiProperty()
     readonly spec: string;
 
     @ApiProperty()
@@ -22,6 +25,9 @@ export class OrderDto {
 
     @ApiProperty()
     readonly status: string;
+
+    @ApiProperty()
+    readonly remark: string;
 
     @ApiProperty()
     readonly createdAt: Date;

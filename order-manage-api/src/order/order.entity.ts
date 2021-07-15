@@ -46,10 +46,19 @@ export class Order extends Model<Order> {
     name: string;
 
     @Column
+    code: string;
+
+    @Column
+    category: string;
+
+    @Column
     spec: string;
 
     @Column
     discount: string;
+
+    @Column
+    remark: string;
 
     @Column
     status: OrderStatus;
