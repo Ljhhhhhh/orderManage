@@ -1,7 +1,7 @@
 <script>
 	import Vue from 'vue'
 	import { mapMutations } from 'vuex'
-	import { baseUrl } from './utils'
+	import { request } from './utils'
 	export default {
 		onLaunch: async function() {
 			uni.getSystemInfo({
@@ -107,22 +107,23 @@
 			]
 			uni.setStorageSync('active-tab', 0)
 			const token = uni.getStorageSync('token');
-			const [err, result] = await uni.request({
-				url: baseUrl + '/users/me',
-				header: {
-					Authorization: 'Bearer ' + token
-				}
-			})
-			if (!err && result.data.code === 0) {
+			if (!token) {
+				uni.clearStorageSync();
+				uni.redirectTo({
+					url: 'pages/login/login'
+				})
+				return;
+			}
+			const [err, data] = await request('/users/me', 'get')
+			if (!err) {
 				// 获取用户信息成功
-				this.setInfo(result.data.data)
+				this.setInfo(data)
 			} else {
 				uni.clearStorageSync();
 				uni.redirectTo({
 					url: 'pages/login/login'
 				})
 			}
-			console.log(result, '用户信息')
 		},
 		onShow: function() {
 			console.log('App Show')

@@ -34,8 +34,9 @@ export class OrderController {
 
     @Get()
     @ApiOkResponse({ type: [OrderDto] })
-    findAll(): Promise<OrderDto[]> {
-        return this.orderService.findAll();
+    @Auth(RoleType.ADMIN, RoleType.PRODUCTION)
+    findAll(@Query() query): Promise<any> {
+        return this.orderService.findAll(query);
     }
 
     @Get('/list')
@@ -48,7 +49,7 @@ export class OrderController {
     @Get(':id')
     @ApiOkResponse({ type: OrderDto })
     @ApiParam({ name: 'id', required: true })
-    findOne(@Param('id', new ParseIntPipe()) id: number): Promise<OrderDto> {
+    findOne(@Param('id') id: string): Promise<OrderDto[]> {
         return this.orderService.findOne(id);
     }
 
@@ -58,7 +59,7 @@ export class OrderController {
     create(
         @Body() createOrderDto: CreateOrderDto,
         @Req() request,
-    ): Promise<OrderEntity> {
+    ): Promise<OrderEntity[]> {
         return this.orderService.create(request.user.id, createOrderDto);
     }
 
@@ -71,8 +72,8 @@ export class OrderController {
         @Param('id') id: string,
         @Req() request,
         @Body() updateOrderDto: UpdateOrderDto,
-    ): Promise<OrderEntity> {
-        return this.orderService.update(id, request.user.id, updateOrderDto);
+    ): Promise<boolean> {
+        return this.orderService.update(id, updateOrderDto);
     }
 
     @Delete(':id')
@@ -80,7 +81,7 @@ export class OrderController {
     @ApiParam({ name: 'id', required: true })
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
-    delete(@Param('id') id: string, @Req() request): Promise<OrderEntity> {
+    delete(@Param('id') id: string, @Req() request): Promise<boolean> {
         return this.orderService.delete(id, request.user.id);
     }
 }

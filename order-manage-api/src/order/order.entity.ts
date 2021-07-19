@@ -13,6 +13,8 @@ import {
     DeletedAt,
     BelongsTo,
 } from 'sequelize-typescript';
+import dayjs from 'dayjs';
+import Sequelize from 'sequelize';
 import { User } from '../users/user.entity';
 import { Customer } from '../customer/customer.entity';
 import { OrderStatus } from '../shared/enum';
@@ -27,6 +29,11 @@ export class Order extends Model<Order> {
         primaryKey: true,
     })
     id: string;
+
+    @Column({
+        field: 'order_id',
+    })
+    orderId: string;
 
     @ForeignKey(() => User)
     @Column({
@@ -45,6 +52,11 @@ export class Order extends Model<Order> {
     @Column
     name: string;
 
+    @Column({
+        field: 'name_list',
+    })
+    nameList: string;
+
     @Column
     code: string;
 
@@ -58,21 +70,49 @@ export class Order extends Model<Order> {
     discount: string;
 
     @Column
+    number: number;
+
+    @Column
     remark: string;
 
     @Column
     status: OrderStatus;
 
     @CreatedAt
-    @Column({ field: 'created_at' })
-    createdAt: Date;
+    @Column({
+        field: 'created_at',
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    })
+    createdAt: string;
+
+    @Column({
+        field: 'update_time',
+    })
+    updateTime: string;
+
+    @Column({
+        field: 'create_time',
+    })
+    createTime: string;
 
     @UpdatedAt
-    @Column({ field: 'updated_at' })
-    updatedAt: Date;
+    @Column({
+        field: 'updated_at',
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    })
+    updatedAt: string;
 
     @DeletedAt
-    @Column({ field: 'deleted_at' })
+    @Column({
+        field: 'deleted_at',
+        get(): any {
+            return this.getDataValue('deletedAt' as any);
+        },
+        set(value: any) {
+            const time = dayjs(value).format('YYYY-MM-DD HH:mm');
+            this.setDataValue('deleted_at' as any, time);
+        },
+    })
     deletedAt: Date;
 
     @BelongsTo(() => User)

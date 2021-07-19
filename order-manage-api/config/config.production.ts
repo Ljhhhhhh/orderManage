@@ -9,6 +9,7 @@ export const config = {
         password: process.env.DATABASE_PASSWORD,
         database: process.env.DATABASE_DATABASE,
         logging: false,
+        timezone: '+08:00',
     },
     jwtPrivateKey: process.env.JWT_PRIVATE_KEY,
 };

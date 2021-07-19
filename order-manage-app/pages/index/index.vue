@@ -7,12 +7,17 @@
 			<mescroll-uni :down="downOption" :up="{textNoMore: '— — 我是有底线的 — —'}" top="168rpx" ref="mescrollRef" @init="mescrollInit"
 				@down="downCallback" @up="upCallback">
 				<view style="width: 1px;height: 30rpx;"></view>
-				<view class="customer-item" @click="goCustomer(customer)" v-for="order in list" :key="order.id">
+				<view class="customer-item" @click="goCustomer(order)" v-for="order in list" :key="order.orderId">
 					<view class="user-info">
-						<text class="cuIcon-my"></text>
-						<text> {{order.name}}</text>
+						<!-- <text class="cuIcon-my"></text> -->
+						<!-- <text v-if="order.salesmanName">{{order.salesmanName}}</text> -->
+						<text>订单编号：{{order.orderId}}</text>
+						<text v-if="order.status === 0">待确认</text>
+						<text v-else-if="order.status === 1">生产中</text>
+						<text v-else-if="order.status === 2">待发货</text>
+						<text v-else-if="order.status === 3">已发货</text>
 					</view>
-					<view class="user-info">
+					<view class="right">
 						<!-- <text>{{order.phone.substr(3)}} </text> -->
 						<text class="cuIcon-right"></text>
 					</view>
@@ -21,7 +26,7 @@
 			</mescroll-uni>
 		</view>
 
-		<view class="flat-btn" @click="createOrder">
+		<view v-if="roleType === 's'" class="flat-btn" @click="createOrder">
 			<image src="../../static/flatAdd.png" mode=""></image>
 		</view>
 		<tabbar :current="0" />
@@ -46,7 +51,13 @@
 				},
 				list: [],
 				current: 0,
+				roleType: 's'
 			};
+		},
+		mounted() {
+			if (uni.getStorageSync('role') === 'PRODUCTION') {
+				this.roleType = 'p'
+			}
 		},
 		methods: {
 			downCallback: function() {
@@ -60,15 +71,13 @@
 				this.fetchCustomer(num)
 			},
 			fetchCustomer: async function(current = 1) {
+				const url = uni.getStorageSync('role') === 'SALESMAN' ? '/order/list' : '/order'
 				try {
-					const {
-						code,
-						data
-					} = await request('/order/list', 'GET', {
+					const [err, data] = await request(url, 'GET', {
 						current,
 						pageSize: 10
 					})
-					if (code === 0) {
+					if (!err) {
 						let curList = []
 						if (current === 1) {
 							curList = data.list;
@@ -89,7 +98,7 @@
 			},
 			goCustomer: function(customer) {
 				uni.navigateTo({
-					url: `/pages/customer/info?id=${customer.id}`
+					url: `/pages/index/orderInfo?id=${customer.orderId}`
 				})
 			},
 			createOrder: function() {
@@ -147,6 +156,13 @@
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			font-size: 28rpx;
+			display: flex;
+			justify-content: space-between;
+			flex: 1;
+		}
+		.right {
+			// width: 60rpx;
+			text-align: right;
 		}
 	}
 </style>

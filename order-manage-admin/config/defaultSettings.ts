@@ -9,6 +9,9 @@ const Settings: LayoutSettings & {
   primaryColor: '#1890ff',
   layout: 'mix',
   contentWidth: 'Fluid',
+  menu: {
+    locale: false,
+  },
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,

@@ -60,31 +60,24 @@
 				this.fetchCustomer(num)
 			},
 			fetchCustomer: async function(current = 1) {
-				try {
-					const {
-						code,
-						data
-					} = await request('/customer', 'GET', {
-						current,
-						pageSize: 10
-					})
-					if (code === 0) {
-						let curList = []
-						if (current === 1) {
-							curList = data.list;
-						} else {
-							curList = [...this.list, ...data.list]
-						}
-						const hasNext = curList.length < data.total;
-						this.mescroll.endSuccess(data.list.length, hasNext);
-						this.list = curList;
-						this.current = data.current;
-						
+				const [err, data] = await request('/customer', 'GET', {
+					current,
+					pageSize: 10
+				})
+				if (!err) {
+					let curList = []
+					if (current === 1) {
+						curList = data.list;
+					} else {
+						curList = [...this.list, ...data.list]
 					}
-				} catch (e) {
+					const hasNext = curList.length < data.total;
+					this.mescroll.endSuccess(data.list.length, hasNext);
+					this.list = curList;
+					this.current = data.current;
+					
+				} else {
 					this.mescroll.endErr();
-					console.log(e, 'e')
-					//TODO handle the exception
 				}
 			},
 			goCustomer: function(customer) {

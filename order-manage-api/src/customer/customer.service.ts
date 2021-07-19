@@ -68,6 +68,7 @@ export class CustomerService {
         }
         const customers = await this.customerRepository.findAll<Customer>({
             where,
+            order: [['updatedAt', 'DESC']],
             limit: pageSize,
             offset: current === 1 ? 0 : (current - 1) * pageSize,
             include: [User],

@@ -37,8 +37,6 @@ const TableList: React.FC = () => {
         rowKey="id"
         search={{
           labelWidth: 120,
-          searchText: '查询',
-          resetText: '重置',
           collapseRender: () => <></>,
         }}
         options={false}

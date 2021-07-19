@@ -9,6 +9,7 @@ export const config = {
         password: 'postgres',
         database: 'nest',
         logging: false,
+        timezone: '+08:00',
     },
     jwtPrivateKey: 'jwtPrivateKey',
 };

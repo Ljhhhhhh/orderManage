@@ -96,7 +96,7 @@ export async function fetchCustomer(
   },
   options?: { [key: string]: any },
 ) {
-  const result: any = await request<API.TCurrentUser>('/customer/list', {
+  const result: any = await request<API.CurrentUser>('/customer/list', {
     method: 'GET',
     params: {
       ...params,
@@ -108,6 +108,37 @@ export async function fetchCustomer(
     success: true,
     total: result.data.total,
   };
+}
+
+/** 获取规则列表 GET /api/rule */
+export async function fetchOrder(
+  params: {
+    // query
+    /** 当前的页码 */
+    current?: number;
+    /** 页面的容量 */
+    pageSize?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  const result: any = await request<API.CurrentUser>('/order', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+  return {
+    data: result.data.list,
+    success: true,
+    total: result.data.total,
+  };
+}
+
+export async function orderDetail(orderId: string) {
+  return request(`/order/${orderId}`, {
+    method: 'GET',
+  });
 }
 
 /** 删除规则 DELETE /api/rule */

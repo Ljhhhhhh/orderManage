@@ -2,7 +2,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history, Link } from 'umi';
+import { history, Link, setLocale } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
@@ -24,10 +24,11 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   fetchUserInfo?: () => Promise<API.LoginResult | undefined>;
 }> {
+  setLocale('zh-CN', false);
   const fetchUserInfo = async () => {
     try {
       const currentUser = await queryCurrentUser();
-      return currentUser as any;
+      return currentUser.data as any;
     } catch (error) {
       history.push(loginPath);
     }
@@ -121,5 +122,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     ...initialState?.settings,
+    locale: 'zh-CN',
   };
 };

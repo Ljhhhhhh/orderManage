@@ -76,10 +76,7 @@
 		},
 		methods: {
 			getCustomerInfo: async function(id) {
-				const {
-					data,
-					code
-				} = await request(`/customer/${id}`, 'GET');
+				const [err, data] = await request(`/customer/${id}`, 'GET');
 				this.id = data.id;
 				this.code = data.code;
 				this.username = data.username;
@@ -96,10 +93,7 @@
 					method = 'PUT'
 					url += `/${this.id}`
 				}
-				const {
-					code,
-					data
-				} = await request(url, method, {
+				const [err, data] = await request(url, method, {
 					username: _this.username,
 					address: _this.address,
 					linkName: _this.linkName,
@@ -107,7 +101,7 @@
 					remark: _this.remark,
 				});
 
-				if (code === 0) {
+				if (!err) {
 					uni.showToast({
 						title: _this.id ? '更新客户成功' : '添加客户成功'
 					})
