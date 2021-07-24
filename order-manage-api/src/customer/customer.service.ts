@@ -95,7 +95,6 @@ export class CustomerService {
     }
 
     async create(salesmanId: string, CreateCustomerDto: CreateCustomerDto) {
-        console.log(salesmanId, CreateCustomerDto);
         const customer = new Customer();
         customer.salesmanId = salesmanId;
         customer.username = CreateCustomerDto.username;

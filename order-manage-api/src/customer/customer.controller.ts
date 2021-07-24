@@ -27,6 +27,9 @@ import { Auth } from '../decorators/http.decorators';
 import { RoleType } from '../shared/enum';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 
+interface CreateCustomerDtoEx extends CreateCustomerDto {
+    salesmanId?: string;
+}
 @Controller('customer')
 @ApiTags('customer')
 export class CustomerController {
@@ -57,10 +60,11 @@ export class CustomerController {
     @ApiCreatedResponse({ type: CustomerEntity })
     @Auth(RoleType.ADMIN, RoleType.SALESMAN)
     create(
-        @Body() createCustomerDto: CreateCustomerDto,
+        @Body() createCustomerDto: CreateCustomerDtoEx,
         @Req() request,
     ): Promise<CustomerEntity> {
-        return this.customerService.create(request.user.id, createCustomerDto);
+        const userId = createCustomerDto.salesmanId || request.user.id;
+        return this.customerService.create(userId, createCustomerDto);
     }
 
     @Put(':id')

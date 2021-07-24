@@ -3,26 +3,49 @@
 		<cu-custom bgColor="bg-primary">
 			<block slot="content">订单</block>
 		</cu-custom>
-		<view class="content">
+		<view class="op-content">
 			<mescroll-uni :down="downOption" :up="{textNoMore: '— — 我是有底线的 — —'}" top="168rpx" ref="mescrollRef" @init="mescrollInit"
 				@down="downCallback" @up="upCallback">
 				<view style="width: 1px;height: 30rpx;"></view>
-				<view class="customer-item" @click="goCustomer(order)" v-for="order in list" :key="order.orderId">
+				<!-- <view class="customer-item" @click="goCustomer(order)" v-for="order in list" :key="order.orderId">
 					<view class="user-info">
-						<!-- <text class="cuIcon-my"></text> -->
-						<!-- <text v-if="order.salesmanName">{{order.salesmanName}}</text> -->
 						<text>订单编号：{{order.orderId}}</text>
-						<text v-if="order.status === 0">待确认</text>
-						<text v-else-if="order.status === 1">生产中</text>
-						<text v-else-if="order.status === 2">待发货</text>
-						<text v-else-if="order.status === 3">已发货</text>
+						<view v-if="order.status === 0" class="cu-tag round bg-red light">待确认</view>
+						<view v-if="order.status === 1" class="cu-tag round bg-blue light">生产中</view>
+						<view v-if="order.status === 2" class="cu-tag round bg-green light">待发货</view>
+						<view v-if="order.status === 3" class="cu-tag round bg-orange light">已发货</view>
 					</view>
 					<view class="right">
-						<!-- <text>{{order.phone.substr(3)}} </text> -->
 						<text class="cuIcon-right"></text>
 					</view>
-
+				</view> -->
+				<view class="cu-list menu sm-border" @click="goCustomer(order)" v-for="order in list" :key="order.orderId">
+					<view class="cu-item arrow">
+						<view class="content">
+							<text>{{order.nameList.split('!@!@').join('、')}}</text>
+							<view class="text-gray text-sm">订单编号：{{order.orderId}}</view>
+						</view>
+						<view class="action">
+							<view v-if="order.status === 0" class="cu-tag round bg-red light">待确认</view>
+							<view v-if="order.status === 1" class="cu-tag round bg-blue light">生产中</view>
+							<view v-if="order.status === 2" class="cu-tag round bg-green light">待发货</view>
+							<view v-if="order.status === 3" class="cu-tag round bg-orange light">已发货</view>
+							
+						</view>
+					</view>
 				</view>
+				<!-- <view class="customer-item" @click="goCustomer(order)" v-for="order in list" :key="order.orderId">
+					<view class="user-info">
+						<text>订单编号：{{order.orderId}}</text>
+						<view v-if="order.status === 0" class="cu-tag round bg-red light">待确认</view>
+						<view v-if="order.status === 1" class="cu-tag round bg-blue light">生产中</view>
+						<view v-if="order.status === 2" class="cu-tag round bg-green light">待发货</view>
+						<view v-if="order.status === 3" class="cu-tag round bg-orange light">已发货</view>
+					</view>
+					<view class="right">
+						<text class="cuIcon-right"></text>
+					</view>
+				</view> -->
 			</mescroll-uni>
 		</view>
 
@@ -111,7 +134,7 @@
 </script>
 
 <style lang="scss" scoped>
-	.content {
+	.op-content {
 		margin-top: 168rpx;
 	}
 
@@ -157,6 +180,7 @@
 			white-space: nowrap;
 			font-size: 28rpx;
 			display: flex;
+			align-items: center;
 			justify-content: space-between;
 			flex: 1;
 		}

@@ -22,12 +22,13 @@ export type OrderStatus = -1 | 0 | 1 | 2 | 3;
 export interface productInOrderProps {
     id?: string;
     orderId: string;
+    productId: string;
     name: string;
-    code: string;
+    // code: string;
     number: number;
-    spec: string;
+    // spec: string;
     discount: string;
-    category: string;
+    // category: string;
     remark?: string;
     status: OrderStatus;
     customerId: string;

@@ -15,6 +15,7 @@ import {
 } from 'sequelize-typescript';
 import dayjs from 'dayjs';
 import Sequelize from 'sequelize';
+import { Product } from './../product/product.entity';
 import { User } from '../users/user.entity';
 import { Customer } from '../customer/customer.entity';
 import { OrderStatus } from '../shared/enum';
@@ -49,22 +50,27 @@ export class Order extends Model<Order> {
     })
     customerId: string;
 
-    @Column
-    name: string;
+    // @Column
+    // name: string;
+    @ForeignKey(() => Product)
+    @Column({
+        field: 'product_id',
+    })
+    productId: string;
 
     @Column({
         field: 'name_list',
     })
     nameList: string;
 
-    @Column
-    code: string;
+    // @Column
+    // name: string;
 
-    @Column
-    category: string;
+    // @Column
+    // category: string;
 
-    @Column
-    spec: string;
+    // @Column
+    // spec: string;
 
     @Column
     discount: string;

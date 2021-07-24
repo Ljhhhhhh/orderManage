@@ -1,3 +1,4 @@
+import { Product } from './../product/product.entity';
 import { Customer } from '../customer/customer.entity';
 import { User } from '../users/user.entity';
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
@@ -39,7 +40,6 @@ export class OrderService {
         const where: any = {};
         const salesmanWhere: any = {};
         const customerWhere: any = {};
-        console.log(createTime, 'createTime');
         if (orderId) {
             where.orderId = {
                 [Op.like]: `%${orderId}%`,
@@ -148,13 +148,20 @@ export class OrderService {
 
         const orders = await this.orderProviders.findAll<Order>({
             where,
-            attributes: ['orderId', 'createTime', 'updateTime', 'nameList'],
+            attributes: [
+                'orderId',
+                'createTime',
+                'updateTime',
+                'nameList',
+                'status',
+            ],
             group: [
                 'orderId',
                 'createTime',
                 'updateTime',
                 'customer.id',
                 'user.id',
+                'Order.status',
                 'nameList',
             ],
             order: [['createTime', 'DESC']],
@@ -229,15 +236,17 @@ export class OrderService {
         createOrderDto.productList.forEach(product => {
             const order = new Order();
             order.orderId = orderId;
-            order.name = product.name;
-            order.code = product.code;
-            order.number = product.number;
-            order.category = product.category;
-            order.spec = product.spec;
+            order.productId = product.productId;
+            // order.name = product.name;
+            // order.code = product.code;
+            // order.number = product.number;
+            // order.category = product.category;
+            // order.spec = product.spec;
             order.discount = product.discount;
             order.remark = product.remark;
             order.userId = userId;
             order.customerId = customerId;
+            order.number = product.number;
             order.nameList = nameList;
             order.createTime = createTime;
             order.updateTime = createTime;
@@ -276,7 +285,6 @@ export class OrderService {
                 const productListId = productList.map(o => o.id);
                 orderList.forEach(item => {
                     if (!productListId.includes(item.id)) {
-                        console.log(item, 'item');
                         item.destroy();
                     }
                 });
@@ -287,11 +295,11 @@ export class OrderService {
                 );
 
                 await order.update({
-                    name: product.name,
+                    productId: product.productId,
                     nameList,
-                    code: product.code,
-                    spec: product.spec,
-                    category: product.category,
+                    // code: product.code,
+                    // spec: product.spec,
+                    // category: product.category,
                     number: product.number,
                     discount: product.discount,
                     status: product.status,

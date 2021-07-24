@@ -3,7 +3,10 @@
 import { extend } from 'umi-request';
 
 const request = extend({
-  prefix: 'http://127.0.0.1:3000',
+  prefix:
+    process.env.NODE_ENV === 'development'
+      ? 'http://127.0.0.1:3000'
+      : 'https://cixing-api.plusdoit.com',
   headers: {
     'Content-Type': 'application/json',
     Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -45,6 +48,7 @@ export async function fetchUser(
     current?: number;
     /** 页面的容量 */
     pageSize?: number;
+    role?: string;
   },
   options?: { [key: string]: any },
 ) {
@@ -138,6 +142,40 @@ export async function fetchOrder(
 export async function orderDetail(orderId: string) {
   return request(`/order/${orderId}`, {
     method: 'GET',
+  });
+}
+
+export async function fetchProduct(params: {
+  // query
+  /** 当前的页码 */
+  current?: number;
+  /** 页面的容量 */
+  pageSize?: number;
+}) {
+  return request<API.RuleListItem>('/product', {
+    method: 'GET',
+    params,
+  });
+}
+
+export async function createProduct(data?: { [key: string]: any }) {
+  return request<API.RuleListItem>('/product', {
+    method: 'POST',
+    data,
+  });
+}
+
+export async function updateProduct(id: string, data?: { [key: string]: any }) {
+  return request<API.RuleListItem>('/product/' + id, {
+    method: 'PUT',
+    data,
+  });
+}
+
+export async function createCustomer(data?: { [key: string]: any }) {
+  return request<API.RuleListItem>('/customer', {
+    method: 'POSt',
+    data,
   });
 }
 

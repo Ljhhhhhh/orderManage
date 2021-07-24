@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { orderDetail } from '@/services/ant-design-pro/api';
+import { orderDetail, fetchProduct } from '@/services/ant-design-pro/api';
 import { Card, Row, Col, Tag, Table, Button } from 'antd';
 import { history } from 'umi';
 import { useReactToPrint } from 'react-to-print';
@@ -18,6 +18,10 @@ const Detail: React.FunctionComponent = () => {
   }, []);
 
   const getDetail = async () => {
+    const productResult: any = await fetchProduct({
+      pageSize: 99999,
+    });
+    const productList: any[] = productResult.data;
     const orderId = history.location.pathname.substr(7);
     const result = await orderDetail(orderId);
     const { code, data } = result;
@@ -31,6 +35,14 @@ const Detail: React.FunctionComponent = () => {
       setInfo(fInfo);
       setCustomer(o1.customer);
       setSalesman(o1.salesman);
+      console.log(data, 'data--');
+      data.forEach((item: any) => {
+        const k = productList.find((o: any) => o.id === item.productId);
+        item.name = k.name;
+        item.code = k.code;
+        item.spec = k.spec;
+        item.category = k.category;
+      });
       setList(data);
     }
   };

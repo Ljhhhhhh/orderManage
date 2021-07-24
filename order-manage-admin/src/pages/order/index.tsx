@@ -102,6 +102,9 @@ const OrderList: React.FC = () => {
       title: '创建时间',
       dataIndex: 'createTime',
       valueType: 'dateRange',
+      render: (dom, record: any) => {
+        return record.createTime;
+      },
     },
   ];
 

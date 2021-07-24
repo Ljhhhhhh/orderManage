@@ -17,19 +17,22 @@ export class OrderDto {
     readonly customerId: string;
 
     @ApiProperty()
-    readonly name: string;
+    readonly productId: string;
+
+    // @ApiProperty()
+    // readonly name: string;
 
     @ApiProperty()
     readonly nameList: string;
 
-    @ApiProperty()
-    readonly code: string;
+    // @ApiProperty()
+    // readonly code: string;
 
-    @ApiProperty()
-    readonly category: string;
+    // @ApiProperty()
+    // readonly category: string;
 
-    @ApiProperty()
-    readonly spec: string;
+    // @ApiProperty()
+    // readonly spec: string;
 
     @ApiProperty()
     readonly discount: string;
@@ -65,6 +68,9 @@ export class OrderDto {
     readonly salesman: any;
 
     @ApiProperty()
+    readonly product: any;
+
+    @ApiProperty()
     readonly customerName: string;
 
     constructor(order: Order) {
@@ -72,11 +78,10 @@ export class OrderDto {
         this.orderId = order.orderId;
         this.userId = order.userId;
         this.customerId = order.customerId;
-        this.name = order.name;
+        this.productId = order.productId;
         this.nameList = order.nameList;
-        this.code = order.code;
-        this.spec = order.spec;
-        this.category = order.category;
+        // this.spec = order.spec;
+        // this.category = order.category;
         this.remark = order.remark;
         this.number = order.number;
         this.discount = order.discount;

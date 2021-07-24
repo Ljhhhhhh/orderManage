@@ -1,5 +1,5 @@
 {
-    "name" : "慈溪订单系统",
+    "name" : "慈星订单系统",
     "appid" : "__UNI__911E60D",
     "description" : "",
     "versionName" : "ColorUi for UniApp 2.1.4",
@@ -57,7 +57,7 @@
         }
     },
     "h5" : {
-        "title" : "ColorUi for UniApp",
-        "domain" : "demo.color-ui.com"
+        "title" : "慈星订单系统",
+        "domain" : "cixing.plusdoit.com"
     }
 }

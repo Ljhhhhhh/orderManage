@@ -15,12 +15,12 @@
       },
     ],
   },
-  {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'team',
-    component: './Welcome',
-  },
+  // {
+  //   path: '/welcome',
+  //   name: 'welcome',
+  //   icon: 'team',
+  //   component: './Welcome',
+  // },
   {
     path: '/order',
     name: '订单管理',
@@ -34,6 +34,13 @@
     name: '订单详情',
     component: './order/detail',
     hideInMenu: true,
+  },
+  {
+    name: '产品管理',
+    icon: 'Shop',
+    path: '/products',
+    access: 'canAdmin',
+    component: './ProductList',
   },
   {
     name: '用户管理',
@@ -51,7 +58,7 @@
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/order',
   },
   {
     component: './404',

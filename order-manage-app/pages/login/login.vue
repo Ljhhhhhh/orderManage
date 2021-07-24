@@ -113,7 +113,6 @@
 					uni.setStorageSync('role', userinfo.role)
 					uni.showToast({
 						title: '登录成功',
-						duration: 1.5
 					})
 					uni.redirectTo({
 						url: '/pages/index/index'
@@ -121,8 +120,7 @@
 				} else {
 					uni.showToast({
 						title: '登录失败，请重试',
-						icon: 'none',
-						duration: 1.5
+						icon: 'none'
 					})
 				}
 				_this.isRotate = false
