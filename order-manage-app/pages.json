@@ -67,7 +67,7 @@
 			"allowsBounceVertical": "NO"
 		},
 		"navigationBarBackgroundColor": "#0092ff",
-		"navigationBarTitleText": "ColorUi for UniApp",
+		"navigationBarTitleText": "慈星订单系统",
 		"navigationStyle": "custom",
 		"navigationBarTextStyle": "white"
 	},

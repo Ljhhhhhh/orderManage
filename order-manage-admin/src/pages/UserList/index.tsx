@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Input, Drawer, Popconfirm, Tag } from 'antd';
-import React, { useState, useRef } from 'react';
+import { Button, message, Input, Drawer, Popconfirm, Tag, Space, Form } from 'antd';
+import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -40,6 +40,14 @@ const TableList: React.FC = () => {
 
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.CurrentUser>();
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (!createModalVisible) {
+      form.resetFields();
+      setCurrentRow(undefined);
+    }
+  }, [createModalVisible]);
 
   const columns: ProColumns<API.CurrentUser>[] = [
     {
@@ -100,16 +108,32 @@ const TableList: React.FC = () => {
           return <span>-</span>;
         }
         return (
-          <Popconfirm
-            cancelText="取消"
-            okText="确认"
-            title={row.status === 1 ? '确认停用' : '确认启用'}
-            onConfirm={() => toggleStatus(row)}
-          >
-            <Button size="small" danger={row.status === 1 ? true : false} type="primary">
-              {row.status === 1 ? '停用' : '启用'}
+          <Space>
+            <Popconfirm
+              cancelText="取消"
+              okText="确认"
+              title={row.status === 1 ? '确认停用' : '确认启用'}
+              onConfirm={() => toggleStatus(row)}
+            >
+              <Button size="small" danger={row.status === 1 ? true : false} type="primary">
+                {row.status === 1 ? '停用' : '启用'}
+              </Button>
+            </Popconfirm>
+            <Button
+              onClick={() => {
+                // row.phone = row.phone ? row.phone.substr(3) : '';
+                const data = {
+                  ...row,
+                  phone: row.phone?.substr(3),
+                };
+                form.setFieldsValue(data);
+                setCurrentRow(data);
+                handleModalVisible(true);
+              }}
+            >
+              操作
             </Button>
-          </Popconfirm>
+          </Space>
         );
       },
     },
@@ -149,15 +173,30 @@ const TableList: React.FC = () => {
         columns={columns}
       />
       <ModalForm
-        title="新增用户"
+        title="用户信息"
         layout="horizontal"
+        form={form}
         width="480px"
         visible={createModalVisible}
         onVisibleChange={handleModalVisible}
         onFinish={async (value) => {
+          // value.phone = '+86' + value.phone;
+          // const success = await handleAdd(value as API.CurrentUser);
+          // if (success) {
+          //   handleModalVisible(false);
+          //   if (actionRef.current) {
+          //     actionRef.current.reload();
+          //   }
+          // }
+
+          let result;
           value.phone = '+86' + value.phone;
-          const success = await handleAdd(value as API.CurrentUser);
-          if (success) {
+          if (currentRow && currentRow.id) {
+            result = (await updateUser(currentRow.id, value as API.CurrentUser)) as any;
+          } else {
+            result = (await createUser(value as API.CurrentUser)) as any;
+          }
+          if (result.code === 0) {
             handleModalVisible(false);
             if (actionRef.current) {
               actionRef.current.reload();
@@ -180,11 +219,11 @@ const TableList: React.FC = () => {
         <ProFormText
           width="md"
           name="password"
-          label="密码"
+          label={currentRow && currentRow.id ? '重置密码' : '密码'}
           placeholder="请输入密码"
           rules={[
             {
-              required: true,
+              required: !(currentRow && currentRow.id),
               message: '密码必填',
             },
           ]}

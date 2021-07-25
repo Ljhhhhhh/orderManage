@@ -57,7 +57,7 @@ const Login: ConnectRC<React.ReactNode> = () => {
     try {
       // 登录
       const msg = await login(values);
-      if (msg.code === 0 && msg.data.role === 'ADMIN') {
+      if (msg.code === 0 && ['PRODUCTION', 'ADMIN'].includes(msg.data.role)) {
         message.success('登录成功！');
         console.log(msg.data);
         setInitialState({
@@ -69,8 +69,8 @@ const Login: ConnectRC<React.ReactNode> = () => {
         goto();
         return;
       }
-      if (msg.code === 0 && msg.data.role !== 'ADMIN') {
-        message.success('仅管理员可用');
+      if (msg.code === 0 && !['PRODUCTION', 'ADMIN'].includes(msg.data.role)) {
+        message.success('当前角色不允许登录后台');
         return;
       }
       // 如果失败去设置用户错误信息

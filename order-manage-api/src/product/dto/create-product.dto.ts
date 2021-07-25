@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Length, IsString } from 'class-validator';
+import { Length, IsString, IsOptional } from 'class-validator';
 
 export class CreateProductDto {
     @ApiProperty()
@@ -14,6 +14,7 @@ export class CreateProductDto {
     @IsString()
     readonly spec: string;
 
+    @IsOptional()
     @ApiProperty()
     @IsString()
     readonly category: string;

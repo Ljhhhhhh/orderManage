@@ -172,9 +172,10 @@ export class UsersService {
             user.password = await hash(updateUserDto.password, salt);
         }
 
-        if (updateUserDto.status !== undefined) {
-            user.status = updateUserDto.status;
-        }
+        user.username = updateUserDto.username || user.username;
+        user.role = updateUserDto.role || user.role;
+        user.phone = updateUserDto.phone || user.phone;
+        user.status = updateUserDto.status || user.status;
 
         try {
             const data = await user.save();

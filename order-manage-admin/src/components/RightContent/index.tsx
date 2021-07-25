@@ -4,12 +4,14 @@ import React from 'react';
 import { useModel, SelectLang } from 'umi';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
+import { Popconfirm } from 'antd';
+import { history, Link, setLocale } from 'umi';
 import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
 
 const GlobalHeaderRight: React.FC = () => {
-  const { initialState } = useModel('@@initialState');
+  const { initialState, setInitialState } = useModel('@@initialState');
 
   if (!initialState || !initialState.settings) {
     return null;
@@ -23,14 +25,19 @@ const GlobalHeaderRight: React.FC = () => {
   }
   return (
     <Space className={className}>
-      <span
-        className={styles.action}
-        onClick={() => {
-          window.open('https://pro.ant.design/docs/getting-started');
+      <Popconfirm
+        title="确定退出登录？"
+        onConfirm={() => {
+          setInitialState({
+            ...initialState,
+            currentUser: undefined,
+          });
+          localStorage.removeItem('token');
+          history.replace('/user/login');
         }}
       >
-        initialState
-      </span>
+        <span className={styles.action}>{initialState.currentUser?.username}</span>
+      </Popconfirm>
     </Space>
   );
 };

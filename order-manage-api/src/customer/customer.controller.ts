@@ -37,14 +37,14 @@ export class CustomerController {
 
     @Get()
     @ApiOkResponse({ type: [CustomerDto] })
-    @Auth(RoleType.ADMIN, RoleType.SALESMAN)
+    @Auth(RoleType.ADMIN, RoleType.SALESMAN, RoleType.PRODUCTION)
     findAllFromUser(@Query() query, @Req() request): Promise<any> {
         return this.customerService.findAllFromUser(request.user.id, query);
     }
 
     @Get('/list')
     @ApiOkResponse({ type: [CustomerDto] })
-    @Auth(RoleType.ADMIN)
+    @Auth(RoleType.ADMIN, RoleType.PRODUCTION)
     findAll(@Query() query): Promise<any> {
         return this.customerService.findAll(query);
     }
@@ -73,14 +73,9 @@ export class CustomerController {
     @Auth(RoleType.ADMIN, RoleType.SALESMAN)
     update(
         @Param('id') id: string,
-        @Req() request,
         @Body() updateCustomerDto: UpdateCustomerDto,
     ): Promise<CustomerEntity> {
-        return this.customerService.update(
-            id,
-            request.user.id,
-            updateCustomerDto,
-        );
+        return this.customerService.update(id, updateCustomerDto);
     }
 
     @Delete(':id')

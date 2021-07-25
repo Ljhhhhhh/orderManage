@@ -63,10 +63,6 @@ const TableList: React.FC = () => {
       dataIndex: 'spec',
     },
     {
-      title: '产品分类',
-      dataIndex: 'category',
-    },
-    {
       title: '状态',
       key: 'status',
       width: 120,
@@ -95,21 +91,6 @@ const TableList: React.FC = () => {
             操作
           </Button>
         );
-        // if (row.role === RoleType.ADMIN) {
-        //   return <span>-</span>;
-        // }
-        // return (
-        //   <Popconfirm
-        //     cancelText="取消"
-        //     okText="确认"
-        //     title={row.status === 1 ? '确认下架' : '确认上架'}
-        //     onConfirm={() => toggleStatus(row)}
-        //   >
-        //     <Button size="small" danger={row.status === 1 ? true : false} type="primary">
-        //       {row.status === 1 ? '下架' : '上架'}
-        //     </Button>
-        //   </Popconfirm>
-        // );
       },
     },
   ];
@@ -205,18 +186,6 @@ const TableList: React.FC = () => {
             {
               required: true,
               message: '规格型号必填',
-            },
-          ]}
-        />
-        <ProFormText
-          width="md"
-          name="category"
-          label="产品分类"
-          placeholder="请输入产品分类"
-          rules={[
-            {
-              required: true,
-              message: '产品分类必填',
             },
           ]}
         />

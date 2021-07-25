@@ -17,8 +17,8 @@ export class ProductDto {
     @ApiProperty()
     readonly discount: string;
 
-    @ApiProperty()
-    readonly category: string;
+    // @ApiProperty()
+    // readonly category: string;
 
     @ApiProperty()
     readonly status: 0 | 1;
@@ -35,7 +35,7 @@ export class ProductDto {
         this.code = product.code;
         this.spec = product.spec;
         this.status = product.status;
-        this.category = product.category;
+        // this.category = product.category;
         this.createdAt = product.createdAt;
         this.updatedAt = product.updatedAt;
     }

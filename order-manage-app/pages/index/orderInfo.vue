@@ -30,11 +30,16 @@
 							v-model="product.name"></input>
 						<text class="cuIcon-right" style="color:#999;font-size: 34rpx;"></text>
 					</view>
+					<view class="cu-form-group">
+						<view class="title"><span class="required-symbol">*</span>规格型号</view>
+						<input disabled placeholder="请输入规格型号" v-model="product.spec"></input>
+					</view>
 					<view class="cu-form-group ">
 						<view class="title"><span class="required-symbol">*</span>产品数量</view>
 						<input :disabled="!canUpdate || roleType === 'p'" type="digit" placeholder="请输入数量"
 							v-model="product.number"></input>
 					</view>
+					
 					<!-- <view class="cu-form-group ">
 						<view class="title"><span class="required-symbol">*</span>产品编号</view>
 						<input :disabled="!canUpdate || roleType === 'p'" placeholder="请输入编号" v-model="product.code" name="code"></input>
@@ -100,19 +105,21 @@
 			</view> -->
 			<view class="cu-form-group" style="border-bottom: 1rpx solid #aaa;">
 				<view class="title">搜索产品</view>
-				<input placeholder="请输入产品名称" v-model="searchValue"></input>
+				<input placeholder="请输入产品名称/型号" v-model="searchValue"></input>
 			</view>
 			<view class="product-wrap">
 				<view class="cu-list menu sm-border" @click="handleProduct(item)" v-for="item in searchedList"
 					:key="item.id">
 					<view class="cu-item">
 						<view class="content">
-							<view class="text-sm">{{item.name}}</view>
-							<view class="text-gray text-sm">{{item.code}}</view>
+							<text class="text-sm">{{item.name}}</text>
+							<text style="display: inline-block;width: 10rpx;height: 1rpx;"></text>
+							<text class="cu-tag round bg-orange light">{{item.spec}}</text>
 						</view>
 						<view class="action">
-							<view class="cu-tag round bg-orange light">{{item.spec}}</view>
-							<view class="cu-tag round bg-olive light" v-if="item.category">{{item.category}}</view>
+							
+							<view class="cu-tag round bg-olive light">{{item.code}}</view>
+							<!-- <view class="" v-if="item.category">{{item.category}}</view> -->
 						</view>
 					</view>
 				</view>
@@ -139,18 +146,12 @@
 			const pageInfo = getCurPage()
 			const id = pageInfo.options.id;
 			this.id = id;
-			if (id) {
-				if (!uni.getStorageSync('role') === 'PRODUCTION') {
-					this.roleType = 'p';
-
-				} else {
-					this.roleType = 's';
-					this.getCustomerList();
-				}
+			if (uni.getStorageSync('role') === 'PRODUCTION') {
+				this.roleType = 'p';
 			} else {
 				this.roleType = 's';
-				this.getCustomerList();
 			}
+			this.getCustomerList();
 
 		},
 		data() {
@@ -175,11 +176,13 @@
 		},
 		watch: {
 			searchValue: function(val) {
-				console.log(val)
 				if (!val) {
 					this.searchedList = this.products
 				} else {
-					this.searchedList = this.products.filter(item => item.name.includes(val))
+					this.searchedList = this.products.filter(item => {
+						const de = item.name + item.spec.toLowerCase();
+						return de.includes(val.toLowerCase());
+					})
 				}
 			}
 		},
@@ -187,7 +190,9 @@
 			handleProduct(product) {
 				this.productList[this.handleProductIndex].productId = product.id;
 				this.productList[this.handleProductIndex].name = product.name;
+				this.productList[this.handleProductIndex].spec = product.spec;
 				this.handleProductIndex = -1;
+				this.searchValue = ''
 				this.$refs.products.close()
 			},
 			selectProduct(index) {
@@ -225,7 +230,6 @@
 			},
 			async getOrderDetail() {
 				const [err, data] = await request(`/order/${this.id}`, 'GET');
-				console.log(data, 'data')
 				const list = []
 				data.forEach(item => {
 					const ddp = this.products.find(p => item.productId === p.id)
@@ -233,6 +237,7 @@
 						id: item.id,
 						productId: item.productId,
 						name: ddp.name,
+						spec: ddp.spec,
 						discountIndex: this.discountRange.findIndex((o) => item.discount === o),
 						number: item.number,
 						remark: item.remark,
@@ -271,7 +276,8 @@
 				}
 			},
 			getCustomerList: async function(id) {
-				const [err, data] = await request(`/customer`, 'GET', {
+				const url = uni.getStorageSync('role') === 'PRODUCTION' ? '/customer/list' : 'customer'
+				const [err, data] = await request(url, 'GET', {
 					pageSize: 99999,
 					current: 1,
 				});

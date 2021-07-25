@@ -53,7 +53,7 @@ export class ProductsService {
         product.name = createProductDto.name;
         product.code = createProductDto.code;
         product.spec = createProductDto.spec;
-        product.category = createProductDto.category;
+        // product.category = createProductDto.category;
         product.status = 1;
         return product.save();
     }
@@ -78,7 +78,7 @@ export class ProductsService {
         product.name = updateProductDto.name || product.name;
         product.code = updateProductDto.code || product.code;
         product.spec = updateProductDto.spec || product.spec;
-        product.category = updateProductDto.category || product.category;
+        // product.category = updateProductDto.category || product.category;
         product.status =
             typeof updateProductDto.status === 'number'
                 ? updateProductDto.status

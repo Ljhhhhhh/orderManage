@@ -3,18 +3,32 @@ import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { ModalForm, ProFormText, ProFormSelect, ProFormTextArea } from '@ant-design/pro-form';
-import { fetchCustomer, fetchUser, createCustomer } from '@/services/ant-design-pro/api';
-import { Button } from 'antd';
+import {
+  fetchCustomer,
+  fetchUser,
+  createCustomer,
+  updateCustomer,
+} from '@/services/ant-design-pro/api';
+import { Button, Form } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 const TableList: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [salesmanList, setSalesmanList] = useState<any[]>([]);
+  const [currentRow, setCurrentRow] = useState<any>();
   const actionRef = useRef<ActionType>();
+  const [form] = Form.useForm();
 
   useEffect(() => {
     getSalesmanList();
   }, []);
+
+  useEffect(() => {
+    if (!createModalVisible) {
+      form.resetFields();
+      setCurrentRow(undefined);
+    }
+  }, [createModalVisible]);
 
   const getSalesmanList = async () => {
     const result = await fetchUser({
@@ -52,6 +66,29 @@ const TableList: React.FC = () => {
       title: '所属销售',
       dataIndex: 'salesmanName',
     },
+    {
+      title: '操作',
+      key: 'option',
+      width: 120,
+      valueType: 'option',
+      render: (_, row) => {
+        return (
+          <Button
+            onClick={() => {
+              const data = {
+                ...row,
+                phone: row.phone?.substr(3),
+              };
+              form.setFieldsValue(data);
+              setCurrentRow(data);
+              handleModalVisible(true);
+            }}
+          >
+            操作
+          </Button>
+        );
+      },
+    },
   ];
 
   const handleAdd = async (values: any) => {
@@ -83,15 +120,21 @@ const TableList: React.FC = () => {
         columns={columns}
       />
       <ModalForm
-        title="新增客户"
+        title="客户信息"
         layout="horizontal"
         width="480px"
+        form={form}
         visible={createModalVisible}
         onVisibleChange={handleModalVisible}
         onFinish={async (value) => {
+          let result;
           value.phone = '+86' + value.phone;
-          const { code } = (await createCustomer(value as API.CurrentUser)) as any;
-          if (code === 0) {
+          if (currentRow && currentRow.id) {
+            result = (await updateCustomer(currentRow.id, value as API.CurrentUser)) as any;
+          } else {
+            result = (await createCustomer(value as API.CurrentUser)) as any;
+          }
+          if (result.code === 0) {
             handleModalVisible(false);
             if (actionRef.current) {
               actionRef.current.reload();

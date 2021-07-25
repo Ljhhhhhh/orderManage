@@ -66,7 +66,7 @@ export async function fetchUser(
   };
 }
 
-export async function updateUser(id: string, body: { status?: 0 | 1; password?: string }) {
+export async function updateUser(id: string, body: { [key: string]: any }) {
   return request<API.UserList>(`/users/${id}`, {
     method: 'PUT',
     data: body,
@@ -174,7 +174,21 @@ export async function updateProduct(id: string, data?: { [key: string]: any }) {
 
 export async function createCustomer(data?: { [key: string]: any }) {
   return request<API.RuleListItem>('/customer', {
-    method: 'POSt',
+    method: 'POST',
+    data,
+  });
+}
+
+export async function updateCustomer(id: string, data?: { [key: string]: any }) {
+  return request<API.RuleListItem>('/customer/' + id, {
+    method: 'PUT',
+    data,
+  });
+}
+
+export async function updateOrder(id: string, data: any) {
+  return request<API.RuleListItem>(`/order/${id}`, {
+    method: 'PUT',
     data,
   });
 }

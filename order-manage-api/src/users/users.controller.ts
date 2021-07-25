@@ -87,8 +87,7 @@ export class UsersController {
         @Body() updateUserDto: UpdateUserDto,
         @Param('id') id: string,
     ): Promise<UserDto> {
-        return {} as any;
-        // return this.usersService.updateFromAdmin(id, updateUserDto);
+        return this.usersService.updateFromAdmin(id, updateUserDto);
     }
 
     @Delete('me')

@@ -49,6 +49,9 @@
 			</mescroll-uni>
 		</view>
 
+		<view class="flat-btn left" @click="logout">
+			<image src="../../static/logout.png" mode=""></image>
+		</view>
 		<view v-if="roleType === 's'" class="flat-btn" @click="createOrder">
 			<image src="../../static/flatAdd.png" mode=""></image>
 		</view>
@@ -83,6 +86,24 @@
 			}
 		},
 		methods: {
+			logout: function() {
+				uni.showModal({
+				    title: '提示',
+				    content: '确认退出登录？',
+					showCancel: true,
+				    success: function (res) {
+				        if (res.confirm) {
+				            console.log('用户点击确定');
+							uni.clearStorageSync()
+							uni.redirectTo({
+							    url: '/pages/login/login'
+							});
+				        } else if (res.cancel) {
+				            console.log('用户点击取消');
+				        }
+				    }
+				});
+			},
 			downCallback: function() {
 				const num = 1
 				this.mescroll.setPageNum(num)
@@ -139,8 +160,8 @@
 	}
 
 	.flat-btn {
-		width: 80rpx;
-		height: 80rpx;
+		width: 60rpx;
+		height: 60rpx;
 		border-radius: 50%;
 		position: fixed;
 		bottom: 200rpx;
@@ -155,6 +176,14 @@
 		}
 	}
 
+	.flat-btn.left {
+		left: 30rpx;
+		width: 50rpx;
+		height: 50rpx;
+		image {
+			box-shadow: none;
+		}
+	}
 	.customer-item {
 		&.header {
 			color: #000;

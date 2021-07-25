@@ -95,10 +95,12 @@ export class CustomerService {
     }
 
     async create(salesmanId: string, CreateCustomerDto: CreateCustomerDto) {
+        const total = await this.customerRepository.count();
+        const code = 'CX' + (10000 + total);
         const customer = new Customer();
         customer.salesmanId = salesmanId;
         customer.username = CreateCustomerDto.username;
-        customer.code = shortid.generate();
+        customer.code = code;
         customer.address = CreateCustomerDto.address;
         customer.linkName = CreateCustomerDto.linkName;
         customer.phone = CreateCustomerDto.phone;
@@ -106,27 +108,19 @@ export class CustomerService {
         return customer.save();
     }
 
-    private async getUserCustomer(id: string, salesmanId: string) {
+    private async getUserCustomer(id: string) {
         const customer = await this.customerRepository.findByPk<Customer>(id);
         if (!customer) {
             throw new HttpException('No customer found', HttpStatus.NOT_FOUND);
-        }
-        if (customer.salesmanId !== salesmanId) {
-            throw new HttpException(
-                '你没有权限操作此用户',
-                HttpStatus.UNAUTHORIZED,
-            );
         }
 
         return customer;
     }
 
-    async update(
-        id: string,
-        salesmanId: string,
-        updateCustomerDto: UpdateCustomerDto,
-    ) {
-        const customer = await this.getUserCustomer(id, salesmanId);
+    async update(id: string, updateCustomerDto: UpdateCustomerDto) {
+        const customer = await this.getUserCustomer(id);
+        customer.salesmanId =
+            updateCustomerDto.salesmanId || customer.salesmanId;
         customer.username = updateCustomerDto.username || customer.username;
         customer.address = updateCustomerDto.address || customer.address;
         customer.phone = updateCustomerDto.phone || customer.phone;
@@ -136,7 +130,7 @@ export class CustomerService {
     }
 
     async delete(id: string, salesmanId: string) {
-        const customer = await this.getUserCustomer(id, salesmanId);
+        const customer = await this.getUserCustomer(id);
         await customer.destroy();
         return customer;
     }

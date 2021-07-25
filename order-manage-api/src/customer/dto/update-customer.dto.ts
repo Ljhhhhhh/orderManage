@@ -26,4 +26,9 @@ export class UpdateCustomerDto {
     @IsString()
     @ApiProperty()
     readonly remark: string;
+
+    @IsOptional()
+    @IsString()
+    @ApiProperty()
+    readonly salesmanId: string;
 }

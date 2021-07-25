@@ -25,11 +25,11 @@
     path: '/order',
     name: '订单管理',
     icon: 'Profile',
-    access: 'canAdmin',
+    access: 'canProduction',
     component: './order',
   },
   {
-    access: 'canAdmin',
+    access: 'canProduction',
     path: '/order/:id',
     name: '订单详情',
     component: './order/detail',
