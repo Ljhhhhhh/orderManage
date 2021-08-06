@@ -296,6 +296,7 @@ export class OrderService {
 
                 await order.update({
                     productId: product.productId,
+                    remark: product.remark,
                     nameList,
                     // code: product.code,
                     // spec: product.spec,

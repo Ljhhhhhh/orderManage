@@ -53,19 +53,23 @@ const TableList: React.FC = () => {
     {
       title: '产品名称',
       dataIndex: 'name',
-    },
-    {
-      title: '产品编号',
-      dataIndex: 'code',
+      colSize: 1,
     },
     {
       title: '规格型号',
       dataIndex: 'spec',
+      colSize: 1,
+    },
+    {
+      title: '产品编号',
+      dataIndex: 'code',
+      colSize: 1,
     },
     {
       title: '状态',
       key: 'status',
       width: 120,
+      hideInSearch: true,
       render: (_: any, row) => {
         return _.status === 1 ? <Tag color="#2db7f5">已上架</Tag> : <Tag color="#f50">已下架</Tag>;
       },
@@ -111,7 +115,7 @@ const TableList: React.FC = () => {
         rowKey="id"
         search={{
           labelWidth: 120,
-          collapseRender: () => <></>,
+          // collapseRender: () => <></>,
         }}
         options={false}
         toolBarRender={() => [

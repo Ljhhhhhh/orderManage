@@ -47,7 +47,7 @@ const TableList: React.FC = () => {
 
   const columns: ProColumns<API.TCustomer>[] = [
     {
-      title: '客户姓名',
+      title: '客户名称',
       dataIndex: 'username',
     },
     {
@@ -147,13 +147,13 @@ const TableList: React.FC = () => {
           rules={[
             {
               required: true,
-              message: '客户姓名必填',
+              message: '客户名称必填',
             },
           ]}
           width="md"
           name="username"
-          placeholder="请输入客户姓名"
-          label="客户姓名"
+          placeholder="请输入客户名称"
+          label="客户名称"
         />
         <ProFormTextArea
           rules={[

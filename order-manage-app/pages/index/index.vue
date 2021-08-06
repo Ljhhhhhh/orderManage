@@ -22,7 +22,11 @@
 				<view class="cu-list menu sm-border" @click="goCustomer(order)" v-for="order in list" :key="order.orderId">
 					<view class="cu-item arrow">
 						<view class="content">
-							<text>{{order.nameList.split('!@!@').join('、')}}</text>
+							<view>
+								<text v-if="roleType === 's'" class="cu-tag bg-primary">{{order.customerName}}</text>
+								<text>{{order.nameList.split('!@!@').join('、')}}</text>
+							</view>
+							
 							<view class="text-gray text-sm">订单编号：{{order.orderId}}</view>
 						</view>
 						<view class="action">

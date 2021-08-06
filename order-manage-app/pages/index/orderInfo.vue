@@ -79,7 +79,7 @@
 				<button v-if="status === 0" class="cu-btn bg-gradual-orange lg submit-btn"
 					@click="changeStatus(1)">更新为生产中</button>
 				<button v-if="status === 1" class="cu-btn bg-gradual-red lg submit-btn"
-					@click="changeStatus(2)">更新位待发货</button>
+					@click="changeStatus(2)">更新为待发货</button>
 				<button v-if="status === 2" class="cu-btn bg-gradual-green lg submit-btn"
 					@click="changeStatus(3)">更新为已发货</button>
 				<button v-if="status === 3" class="cu-btn bg-gradual-purple lg submit-btn">已发货</button>
@@ -103,11 +103,15 @@
 			<!-- <view class="search-input">
 				<input placeholder="搜索产品" v-model="searchValue" type="text">
 			</view> -->
+			<v-tabs v-model="currentNameIndex" :tabs="productNameList" @change="changeName"></v-tabs>
 			<view class="cu-form-group" style="border-bottom: 1rpx solid #aaa;">
-				<view class="title">搜索产品</view>
-				<input placeholder="请输入产品名称/型号" v-model="searchValue"></input>
+				<view class="title">搜索型号</view>
+				<input placeholder="请输入型号" v-model="searchValue"></input>
 			</view>
-			<view class="product-wrap">
+			<!-- <scroll-view scroll-x="true" class="name-list">
+				<view v-for="(item,index) in productNameList" :key="item" class="cu-tag">{{item}}</view>
+			</scroll-view> -->
+			<scroll-view scroll-y="true" class="product-wrap">
 				<view class="cu-list menu sm-border" @click="handleProduct(item)" v-for="item in searchedList"
 					:key="item.id">
 					<view class="cu-item">
@@ -123,7 +127,7 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</scroll-view>
 		</uni-popup>
 	</view>
 </template>
@@ -156,6 +160,8 @@
 		},
 		data() {
 			return {
+				currentName: '',
+				currentNameIndex: -1,
 				searchValue: '',
 				status: 0,
 				roleType: 's',
@@ -163,7 +169,9 @@
 				canCancel: true,
 				customerList: [],
 				products: [],
+				productNameList: [],
 				searchedList: [],
+				filterList: [],
 				discountRange: ['无折扣', '95折', '9折', '85折', '8折', ],
 				customerIndex: -1,
 				id: '',
@@ -177,16 +185,26 @@
 		watch: {
 			searchValue: function(val) {
 				if (!val) {
-					this.searchedList = this.products
+					this.searchedList = this.filterList;
 				} else {
-					this.searchedList = this.products.filter(item => {
-						const de = item.name + item.spec.toLowerCase();
-						return de.includes(val.toLowerCase());
+					this.searchedList = this.filterList.filter(item => {
+						return item.spec.toLowerCase().includes(val.toLowerCase());
 					})
 				}
+			},
+			filterList: function(val) {
+				this.searchedList = val.filter(item => {
+					return item.spec.toLowerCase().includes(this.searchValue);
+				})
 			}
 		},
 		methods: {
+			changeName(index) {
+				this.currentNameIndex = index;
+				const name = this.productNameList[index];
+				const list = this.products.filter(product => product.name === name)
+				this.filterList = list.filter(item => item.spec.toLowerCase().includes(this.searchValue))
+			},
 			handleProduct(product) {
 				this.productList[this.handleProductIndex].productId = product.id;
 				this.productList[this.handleProductIndex].name = product.name;
@@ -201,18 +219,46 @@
 				this.handleProductIndex = index;
 			},
 			async changeStatus(status) {
-				const customerId = this.productList[0].customerId;
-				const newList = [...this.productList];
-				newList.forEach(item => {
-					item.status = status;
-				});
-				const [err, data] = await request(`/order/${this.id}`, 'put', {
-					customerId,
-					productList: newList,
-				})
-				if (!err) {
-					this.status = status;
+				let message = '';
+				switch (status){
+					case 1:
+						message = '更新为生产中'
+						break;
+					case 2:
+						message = '更新为待发货'
+						break;
+					case 3:
+						message = '更新为已发货'
+						break;
+					default:
+						break;
 				}
+				uni.showModal({
+					title: '提示',
+					content: message,
+					cancelText: '取消',
+					confirmText: '确认',
+					success: async (res) => {
+						if (res.confirm) {
+						    const customerId = this.productList[0].customerId;
+						    const newList = [...this.productList];
+						    newList.forEach(item => {
+						    	item.status = status;
+						    });
+						    const [err, data] = await request(`/order/${this.id}`, 'put', {
+						    	customerId,
+						    	productList: newList,
+						    })
+						    if (!err) {
+						    	this.status = status;
+						    }
+						} else if (res.cancel) {
+						    console.log('用户点击取消');
+						}
+					}
+				})
+				
+				
 			},
 			async cancel() {
 				const [err, data] = await request(`/order/${this.id}`, 'DELETE');
@@ -243,7 +289,6 @@
 						remark: item.remark,
 					}
 					list.push(product)
-
 				})
 				this.productList = list;
 				const {
@@ -270,13 +315,25 @@
 					pageSize: 99999,
 					current: 1,
 				});
-				this.products = this.searchedList = data;
+				this.products = this.searchedList = this.filterList = data;
+				const nameList = ['小型减速电机', '微型齿轮减速机']
+				
+				data.forEach(product => {
+					if (!nameList.includes(product.name)) {
+						nameList.push(product.name)
+					}
+					// if (!nameList[product.name]) {
+					// 	nameList[product.name] = []
+					// }
+					// nameList[product.name].push(product)
+				})
+				this.productNameList = nameList
 				if (this.id) {
 					this.getOrderDetail();
 				}
 			},
 			getCustomerList: async function(id) {
-				const url = uni.getStorageSync('role') === 'PRODUCTION' ? '/customer/list' : 'customer'
+				const url = uni.getStorageSync('role') === 'PRODUCTION' ? '/customer/list' : '/customer'
 				const [err, data] = await request(url, 'GET', {
 					pageSize: 99999,
 					current: 1,
@@ -370,10 +427,17 @@
 	.submit-btn {
 		width: 100%;
 	}
+	
+	.name-list {
+		width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 
 	.product-wrap {
 		max-height: 960rpx;
 		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.product-wrap .cu-list+.cu-list {

@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Tag } from 'antd';
+import { Tag, Form } from 'antd';
 import { fetchOrder, orderDetail } from '@/services/ant-design-pro/api';
 import { history } from 'umi';
 
@@ -35,7 +35,7 @@ const OrderList: React.FC = () => {
       },
     },
     {
-      title: '客户姓名',
+      title: '客户名称',
       dataIndex: 'customerName',
       valueType: 'textarea',
     },
@@ -93,11 +93,6 @@ const OrderList: React.FC = () => {
         },
       },
     },
-    // {
-    //   title: '更新时间',
-    //   dataIndex: 'updateTime',
-    //   hideInForm: true,
-    // },
     {
       title: '创建时间',
       dataIndex: 'createTime',

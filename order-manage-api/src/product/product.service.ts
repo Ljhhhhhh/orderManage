@@ -18,8 +18,9 @@ export class ProductsService {
         current: number;
         name?: string;
         code?: string;
+        spec?: string;
     }) {
-        const { pageSize = 10, current = 1, name, code } = query;
+        const { pageSize = 10, current = 1, name, code, spec } = query;
         const where: any = {};
         if (name) {
             where.name = {
@@ -31,9 +32,16 @@ export class ProductsService {
                 [Op.like]: `%${code}%`,
             };
         }
+        if (spec) {
+            where.spec = {
+                [Op.like]: `%${spec}%`,
+            };
+        }
         const products = await this.productsRepository.findAll<Product>({
             where,
             order: [['createdAt', 'DESC']],
+            limit: pageSize,
+            offset: current === 1 ? 0 : (current - 1) * pageSize,
         });
         return products.map(product => new ProductDto(product));
     }
