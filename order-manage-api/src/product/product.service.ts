@@ -43,7 +43,14 @@ export class ProductsService {
             limit: pageSize,
             offset: current === 1 ? 0 : (current - 1) * pageSize,
         });
-        return products.map(product => new ProductDto(product));
+        const list = products.map(product => new ProductDto(product));
+        return {
+            list,
+            total: await this.productsRepository.count({
+                where,
+            }),
+            current,
+        };
     }
 
     async findOne(id: number) {
