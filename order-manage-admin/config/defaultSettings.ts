@@ -14,7 +14,7 @@ const Settings: LayoutSettings & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '慈星订单管理系统',
+  title: '科劲订单管理系统',
   pwa: false,
   iconfontUrl: '',
 };

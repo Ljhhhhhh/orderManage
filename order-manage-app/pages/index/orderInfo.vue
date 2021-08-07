@@ -148,6 +148,10 @@
 	export default {
 		onShow(re) {
 			const pageInfo = getCurPage()
+			uni.showLoading({
+				 title: '加载中……',
+				position: 'center'
+			})
 			const id = pageInfo.options.id;
 			this.id = id;
 			if (uni.getStorageSync('role') === 'PRODUCTION') {
@@ -261,18 +265,28 @@
 				
 			},
 			async cancel() {
-				const [err, data] = await request(`/order/${this.id}`, 'DELETE');
-				if (!err) {
-					uni.showToast({
-						title: '操作成功，请刷新页面'
-					})
-					setTimeout(() => {
-						uni.redirectTo({
-							url: '/pages/index/index'
-						})
-					}, 1000)
-
-				}
+				uni.showModal({
+					title: '提示',
+					content: '确认取消订单？',
+					cancelText: '取消',
+					confirmText: '确认',
+					success: async (res) => {
+						if (res.confirm) {
+							const [err, data] = await request(`/order/${this.id}`, 'DELETE');
+							if (!err) {
+								uni.showToast({
+									title: '操作成功，请刷新页面'
+								})
+								setTimeout(() => {
+									uni.redirectTo({
+										url: '/pages/index/index'
+									})
+								}, 1000)
+							
+							}
+						}}
+				})
+				
 			},
 			async getOrderDetail() {
 				const [err, data] = await request(`/order/${this.id}`, 'GET');
@@ -315,6 +329,7 @@
 					pageSize: 99999,
 					current: 1,
 				});
+				console.log(data, 'data')
 				this.products = this.searchedList = this.filterList = data;
 				const nameList = ['小型减速电机', '微型齿轮减速机']
 				
@@ -331,6 +346,7 @@
 				if (this.id) {
 					this.getOrderDetail();
 				}
+				uni.hideLoading()
 			},
 			getCustomerList: async function(id) {
 				const url = uni.getStorageSync('role') === 'PRODUCTION' ? '/customer/list' : '/customer'

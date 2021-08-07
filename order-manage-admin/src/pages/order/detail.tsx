@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { orderDetail, fetchProduct, updateOrder } from '@/services/ant-design-pro/api';
-import { Card, Row, Col, Tag, Table, Button, Form, Radio, message, Popconfirm } from 'antd';
+import { Card, Row, Col, Tag, Table, Button, Form, Radio, message, Popconfirm, Space } from 'antd';
 import { history, useModel } from 'umi';
 import { useReactToPrint } from 'react-to-print';
 import { ModalForm, ProFormTextArea } from '@ant-design/pro-form';
@@ -133,7 +133,7 @@ const Detail: React.FunctionComponent = () => {
     const productResult: any = await fetchProduct({
       pageSize: 99999,
     });
-    const productList: any[] = productResult.data;
+    const productList: any[] = productResult.data.list;
     const orderId = history.location.pathname.substr(7);
     const result = await orderDetail(orderId);
     const { code, data } = result;
@@ -212,7 +212,12 @@ const Detail: React.FunctionComponent = () => {
       default:
         break;
     }
-    return <Tag color={color}>{msg}</Tag>;
+    return (
+      <Space>
+        <Tag>订单编号：{list[0].orderId}</Tag>
+        <Tag color={color}>{msg}</Tag>
+      </Space>
+    );
   };
 
   const printOrder = useReactToPrint({

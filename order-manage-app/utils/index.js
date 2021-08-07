@@ -1,4 +1,4 @@
-export const baseUrl = 'https://cixing-api.plusdoit.com'
+export const baseUrl = 'https://kejin-api.plusdoit.com'
 // http://localhost:3000 'https://cixing-api.plusdoit.com'; // 
 export function getCurPage(){
     let pages = getCurrentPages();
@@ -57,7 +57,6 @@ export async function request(url, method, data) {
 			if (!err) {
 				const { code, status, message } = result.data;
 				const errCode = status || code;
-				console.log(result.data.response, '=-=-0')
 				if (errCode) {
 					const responseMessage = result.data.response.message && result.data.response.message.join(',')
 					uni.showToast({

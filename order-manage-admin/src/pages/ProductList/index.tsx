@@ -108,10 +108,22 @@ const TableList: React.FC = () => {
   //   console.log(result);
   // };
 
+  const request = async (params: any) => {
+    const { data } = (await fetchProduct(params)) as any;
+    return {
+      data: data.list,
+      success: true,
+      total: data.total,
+    };
+  };
+
   return (
     <PageContainer>
       <ProTable<API.CurrentUser, API.PageParams>
         actionRef={actionRef}
+        pagination={{
+          pageSizeOptions: ['1', '2', '5'],
+        }}
         rowKey="id"
         search={{
           labelWidth: 120,
@@ -129,7 +141,7 @@ const TableList: React.FC = () => {
             <PlusOutlined /> 新增
           </Button>,
         ]}
-        request={fetchProduct}
+        request={request}
         columns={columns}
       />
       <ModalForm

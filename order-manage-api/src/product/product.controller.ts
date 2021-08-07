@@ -34,7 +34,7 @@ export class ProductsController {
 
     @Get()
     @ApiOkResponse({ type: [ProductDto] })
-    findAll(@Query() query): Promise<ProductDto[]> {
+    findAll(@Query() query): Promise<any> {
         return this.productsService.findAll(query);
     }
 

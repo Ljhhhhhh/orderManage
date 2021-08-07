@@ -227,8 +227,7 @@ export class OrderService {
         const createTime = dayjs().format('YYYY-MM-DD HH:mm');
         const orderProduct = [];
         const orderId =
-            dayjs().format('YYYYMMDDHH') +
-            Math.floor(Math.random() * 8999 + 1000);
+            dayjs().format('YYMMDD') + Math.floor(Math.random() * 8999 + 1000);
         const customerId = createOrderDto.customerId;
         const nameList = createOrderDto.productList
             .map(p => p.name)

@@ -6,7 +6,7 @@ const request = extend({
   prefix:
     process.env.NODE_ENV === 'development'
       ? 'http://127.0.0.1:3000'
-      : 'https://cixing-api.plusdoit.com',
+      : 'https://kejin-api.plusdoit.com',
   headers: {
     'Content-Type': 'application/json',
     Authorization: 'Bearer ' + localStorage.getItem('token'),
