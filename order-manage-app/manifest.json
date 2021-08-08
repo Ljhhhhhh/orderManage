@@ -1,5 +1,5 @@
 {
-    "name" : "科劲订单系统",
+    "name" : "慈星订单系统",
     "appid" : "__UNI__911E60D",
     "description" : "",
     "versionName" : "ColorUi for UniApp 2.1.4",
@@ -48,7 +48,7 @@
     /* 快应用特有相关 */
     "mp-weixin" : {
         /* 小程序特有相关 */
-        "appid" : "wxdfd9d0f576b61892",
+        "appid" : "wx26df6266de5af21e",
         "setting" : {
             "urlCheck" : false,
             "es6" : false,

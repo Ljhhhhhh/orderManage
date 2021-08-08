@@ -1,4 +1,4 @@
-export const baseUrl = 'https://kejin-api.plusdoit.com'
+export const baseUrl = 'https://cixing-api.plusdoit.com'
 // http://localhost:3000 'https://cixing-api.plusdoit.com'; // 
 export function getCurPage(){
     let pages = getCurrentPages();
