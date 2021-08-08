@@ -103,7 +103,7 @@
 			<!-- <view class="search-input">
 				<input placeholder="搜索产品" v-model="searchValue" type="text">
 			</view> -->
-			<v-tabs v-model="currentNameIndex" :tabs="productNameList" @change="changeName"></v-tabs>
+			<v-tabs  v-model="currentNameIndex" :tabs="productNameList" @change="changeName"></v-tabs>
 			<view class="cu-form-group" style="border-bottom: 1rpx solid #aaa;">
 				<view class="title">搜索型号</view>
 				<input placeholder="请输入型号" v-model="searchValue"></input>
@@ -123,7 +123,6 @@
 						<view class="action">
 							
 							<view class="cu-tag round bg-olive light">{{item.code}}</view>
-							<!-- <view class="" v-if="item.category">{{item.category}}</view> -->
 						</view>
 					</view>
 				</view>
@@ -174,7 +173,7 @@
 				customerList: [],
 				products: [],
 				productNameList: [],
-				searchedList: [],
+				// searchedList: [],
 				filterList: [],
 				discountRange: ['无折扣', '95折', '9折', '85折', '8折', ],
 				customerIndex: -1,
@@ -186,20 +185,10 @@
 				handleProductIndex: -1,
 			};
 		},
-		watch: {
-			searchValue: function(val) {
-				if (!val) {
-					this.searchedList = this.filterList;
-				} else {
-					this.searchedList = this.filterList.filter(item => {
-						return item.spec.toLowerCase().includes(val.toLowerCase());
-					})
-				}
-			},
-			filterList: function(val) {
-				this.searchedList = val.filter(item => {
-					return item.spec.toLowerCase().includes(this.searchValue);
-				})
+		computed: {
+			searchedList: function () {
+				const list = this.filterList.filter(item => item.spec.toLowerCase().includes(this.searchValue))
+				return list;
 			}
 		},
 		methods: {
@@ -329,9 +318,10 @@
 					pageSize: 99999,
 					current: 1,
 				});
-				this.products = this.searchedList = this.filterList = data.list;
-				const nameList = ['小型减速电机', '微型齿轮减速机']
-				
+				// = this.searchedList = this.filterList
+				this.products  = data.list;
+				// const nameList = ['小型减速电机', '微型齿轮减速机']
+				const nameList = []
 				data.list.forEach(product => {
 					if (!nameList.includes(product.name)) {
 						nameList.push(product.name)
@@ -342,6 +332,8 @@
 					// nameList[product.name].push(product)
 				})
 				this.productNameList = nameList
+				this.filterList = data.list.filter(product => product.name === nameList[0])
+				this.currentNameIndex = 0
 				if (this.id) {
 					this.getOrderDetail();
 				}
