@@ -64,11 +64,22 @@ export class ProductsService {
     }
 
     async create(createProductDto: CreateProductDto) {
+        const { name, code, spec } = createProductDto;
+        const productExited = await this.productsRepository.findOne<Product>({
+            where: {
+                name,
+                code,
+                spec,
+            },
+        });
+        if (productExited) {
+            return '此产品已存在' as any;
+            // throw new HttpException('', HttpStatus.BAD_REQUEST);
+        }
         const product = new Product();
-        product.name = createProductDto.name;
-        product.code = createProductDto.code;
-        product.spec = createProductDto.spec;
-        // product.category = createProductDto.category;
+        product.name = name;
+        product.code = code;
+        product.spec = spec;
         product.status = 1;
         return product.save();
     }

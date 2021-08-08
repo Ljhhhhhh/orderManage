@@ -329,11 +329,10 @@
 					pageSize: 99999,
 					current: 1,
 				});
-				console.log(data, 'data')
-				this.products = this.searchedList = this.filterList = data;
+				this.products = this.searchedList = this.filterList = data.list;
 				const nameList = ['小型减速电机', '微型齿轮减速机']
 				
-				data.forEach(product => {
+				data.list.forEach(product => {
 					if (!nameList.includes(product.name)) {
 						nameList.push(product.name)
 					}
