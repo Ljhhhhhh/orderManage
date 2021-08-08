@@ -107,6 +107,7 @@
 			<view class="cu-form-group" style="border-bottom: 1rpx solid #aaa;">
 				<view class="title">搜索型号</view>
 				<input placeholder="请输入型号" v-model="searchValue"></input>
+				<view class="cu-btn bg-orange" @click="searchProduct">搜索</view>
 			</view>
 			<!-- <scroll-view scroll-x="true" class="name-list">
 				<view v-for="(item,index) in productNameList" :key="item" class="cu-tag">{{item}}</view>
@@ -145,7 +146,7 @@
 		remark: '',
 	}
 	export default {
-		onShow(re) {
+		async onShow(re) {
 			const pageInfo = getCurPage()
 			uni.showLoading({
 				 title: '加载中……',
@@ -159,7 +160,6 @@
 				this.roleType = 's';
 			}
 			this.getCustomerList();
-
 		},
 		data() {
 			return {
@@ -173,7 +173,7 @@
 				customerList: [],
 				products: [],
 				productNameList: [],
-				// searchedList: [],
+				searchedList: [],
 				filterList: [],
 				discountRange: ['无折扣', '95折', '9折', '85折', '8折', ],
 				customerIndex: -1,
@@ -185,13 +185,40 @@
 				handleProductIndex: -1,
 			};
 		},
-		computed: {
-			searchedList: function () {
-				const list = this.filterList.filter(item => item.spec.toLowerCase().includes(this.searchValue))
-				return list;
-			}
-		},
+		// computed: {
+		// 	searchedList: function () {
+		// 		const list = this.filterList.filter(item => item.spec.toLowerCase().includes(this.searchValue))
+		// 		return list;
+		// 	}
+		// },
 		methods: {
+			async searchProduct() {
+				if (this.currentNameIndex < 0) {
+					uni.showToast({
+						title: '请先选择产品名称',
+						icon: 'none'
+					})
+					return;
+				}
+				if (!this.searchValue) {
+					uni.showToast({
+						title: '请输入产品型号',
+						icon: 'none'
+					})
+					return;
+				}
+				const name = this.productNameList[this.currentNameIndex];
+				const list = this.products.filter(item => {
+					return item.name === name && item.spec.toLowerCase().includes(this.searchValue)
+				})
+				this.searchedList = list;
+				if (!list.length) {
+					uni.showToast({
+						title: '搜索不到对应产品',
+						icon: 'none'
+					})
+				}
+			},
 			changeName(index) {
 				this.currentNameIndex = index;
 				const name = this.productNameList[index];
@@ -332,8 +359,8 @@
 					// nameList[product.name].push(product)
 				})
 				this.productNameList = nameList
-				this.filterList = data.list.filter(product => product.name === nameList[0])
-				this.currentNameIndex = 0
+				// this.filterList = data.list.filter(product => product.name === nameList[0])
+				// this.currentNameIndex = 0
 				if (this.id) {
 					this.getOrderDetail();
 				}

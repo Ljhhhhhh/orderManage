@@ -1,3 +1,4 @@
+import { groupBy } from 'lodash';
 import { User } from '../users/user.entity';
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -61,6 +62,20 @@ export class ProductsService {
             throw new HttpException('No product found', HttpStatus.NOT_FOUND);
         }
         return new ProductDto(product);
+    }
+
+    async search(params: { name: string; spec: string }) {
+        const { name, spec } = params;
+        const products = await this.productsRepository.findAll<Product>({
+            where: {
+                name,
+                spec: {
+                    [Op.like]: `%${spec}%`,
+                },
+            },
+        });
+        const list = products.map(product => new ProductDto(product));
+        return list;
     }
 
     async create(createProductDto: CreateProductDto) {

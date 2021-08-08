@@ -45,6 +45,14 @@ export class ProductsController {
         return this.productsService.findOne(id);
     }
 
+    @Post('/search')
+    @ApiOkResponse({ type: ProductDto })
+    search(
+        @Body() params: { name: string; spec: string },
+    ): Promise<ProductDto[]> {
+        return this.productsService.search(params);
+    }
+
     @Post()
     @ApiCreatedResponse({ type: ProductEntity })
     @Auth(RoleType.ADMIN)
